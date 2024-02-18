@@ -1,0 +1,15 @@
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: users_balance
+    env_file:
+      - docker/env/.env
+    ports:
+      - 8000:8000
+
+    command: sh -c "poetry run python manage.py collectstatic --no-input &&
+              poetry run python manage.py migrate &&
+              poetry run python manage.py runserver"
