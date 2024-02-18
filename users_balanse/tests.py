@@ -68,16 +68,12 @@ class TestUserBalanceTestCase(APITestCase):
             }
         )
 
-        print("response.data:", response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(serializer.is_valid())
-        print("serializer.data:", serializer.data)
+
         self.assertEqual(
             Decimal(
-                serializer.data["converted_balance"].quantize(
-                    Decimal(".0001"), rounding=ROUND_HALF_UP
-                )
-            ),
+                serializer.data["converted_balance"]),
             Decimal(16.6667).quantize(Decimal(".0001"), rounding=ROUND_HALF_UP),
         )
 

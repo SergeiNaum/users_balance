@@ -6,7 +6,7 @@ on:
       - v* # только теги начинающиеся с v: v1, v2, v5
 
 env:
-  APP_IMAGE_NAME: sergeynaum/python-project-52
+  APP_IMAGE_NAME: sergeynaum/users_balanse
 
 jobs:
   docker:

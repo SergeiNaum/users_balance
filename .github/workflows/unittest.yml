@@ -1,0 +1,26 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [pull_request, push]
+jobs:
+  run_unittests:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ['3.11']
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+      - name: Run Tests
+        run: |
+          echo "SECRET_KEY = 'django-insecure-dummy-secret'"
+          python3 manage.py test

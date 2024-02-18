@@ -1,3 +1,5 @@
+[![release](https://github.com/SergeiNaum/users_balance/actions/workflows/release.yml/badge.svg)](https://github.com/SergeiNaum/users_balance/actions/workflows/release.yml)
+
 **users_balance** Api for working with user balances. Created with DRF
 
 # Quick start
@@ -6,7 +8,7 @@
 
 ---
 ```
-docker pull sergeynaum/users_balance:latest
+docker pull sergeynaum/users_balanse:latest
 ```
 ---
 ##### Start the container by running the command
