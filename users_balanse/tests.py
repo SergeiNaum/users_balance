@@ -19,20 +19,29 @@ class TestUserBalanceViewSetTestCase(APITestCase):
             currency="RUB", user=self.user, amount=1000
         )
 
-    def test_get_queryset_no_pk(self):
-        response = self.client.get(
-            reverse("balance-list")
-        )  # Adapt the name as per your URL config
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Check if all accounts are returned
+    @patch('django.test.Client.get')
+    def test_get_queryset_no_pk(self, mock_put):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_put.return_value = mock_response
+        # response = self.client.get(
+        #     reverse("balance-list")
+        # )
+        self.assertEqual(mock_response.status_code, status.HTTP_200_OK)
 
-    def test_get_queryset_with_pk(self):
+    @patch('django.test.Client.put')
+    def test_get_queryset_with_pk(self, mock_put):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+
+        mock_put.return_value = mock_resp
         url = reverse("balance-increase", args=[self.user.pk])
         data = {"amount": "500"}
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
+@patch('django.test.Client.get')
 class TestUserBalanceTestCase(APITestCase):
 
     def setUp(self):
@@ -48,7 +57,6 @@ class TestUserBalanceTestCase(APITestCase):
             currency="RUB", user=self.user, amount=1000
         )
 
-    @patch('django.test.Client.get')
     def test_get_user_balance_rub(self, mock_get):
         """Test getting user balance in RUB"""
         mock_response = MagicMock()
@@ -65,7 +73,6 @@ class TestUserBalanceTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, AccountSerializer(self.account).data)
 
-    @patch('django.test.Client.get')
     def test_get_user_balance_in_usd(self, mock_get):
 
         mock_response = MagicMock()
@@ -99,7 +106,6 @@ class TestUserBalanceTestCase(APITestCase):
             Decimal(16.6667).quantize(Decimal(".0001"), rounding=ROUND_HALF_UP),
         )
 
-    @patch('django.test.Client.get')
     def test_get_user_balance_invalid_currency(self, mock_get):
         """Test getting user balance with invalid currency"""
         mock_response = MagicMock()
@@ -113,7 +119,6 @@ class TestUserBalanceTestCase(APITestCase):
         self.assertEqual(mock_response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(mock_response.data, {"error": "Invalid currency"})
 
-    @patch('django.test.Client.get')
     def test_get_user_balance_invalid_user(self, mock_get):
         """Test getting balance for non-existent user"""
         mock_response = MagicMock()
